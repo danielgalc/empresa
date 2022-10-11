@@ -10,6 +10,9 @@
     <?php
     $pdo = new PDO('pgsql:host=localhost;dbname=empresa', 'empresa', 'empresa');
     $sent = $pdo->query('SELECT * FROM departamentos');
+
+    $fila = $sent->fetch();
+    print_r($fila);
     ?>
 </body>
 </html>
