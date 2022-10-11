@@ -8,7 +8,8 @@
 </head>
 <body>
     <?php
-    
+    $pdo = new PDO('pgsql:host=localhost;dbname=empresa', 'empresa', 'empresa');
+    $sent = $pdo->query('SELECT * FROM departamentos');
     ?>
 </body>
 </html>
