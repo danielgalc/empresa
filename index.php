@@ -7,12 +7,34 @@
     <title>Departamentos</title>
 </head>
 <body>
-    <?php
-    $pdo = new PDO('pgsql:host=localhost;dbname=empresa', 'empresa', 'empresa');
-    $sent = $pdo->query('SELECT * FROM departamentos ORDER BY codigo');
+    <?php 
+    
+    $codigo = (isset($_GET['codigo'])) ? trim($_GET['codigo']) : null;
+
+
     ?>
 
-    <div style="margin:auto">
+    <div>
+        <form action="" method="get">
+            <label>
+                Código:
+                <input type="text" name="codigo" size="8" value="<?= $codigo ?>">
+            </label>
+            <button type="submit">Buscar</button>
+        </form>
+    </div>
+
+    <?php
+    $pdo = new PDO('pgsql:host=localhost;dbname=empresa', 'empresa', 'empresa');
+    $pdo->beginTransaction();
+    $sent = $pdo->query("LOCK TABLE departamentos IN SHARE MODE");
+    $sent = $pdo->query('SELECT COUNT(*) FROM departamentos');
+    $total = $sent->fetchColumn();
+    $sent = $pdo->query("SELECT * FROM departamentos ORDER BY codigo");
+    $pdo->commit();
+    ?>
+
+    <div>
         <table style="margin:auto" border="1">
             <thead>
                 <th>Código</th>
@@ -27,7 +49,7 @@
                 <?php endforeach ?>
             </tbody>
         </table>
-
+        <p>Número total de filas: <?= $total ?></p>
     </div>
 </body>
 </html>
