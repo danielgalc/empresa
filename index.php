@@ -10,15 +10,19 @@
     <?php 
     
     $codigo = (isset($_GET['codigo'])) ? trim($_GET['codigo']) : null;
-
+    $codigo2 = (isset($_GET['codigo2'])) ? trim($_GET['codigo2']) : null;
 
     ?>
 
     <div>
         <form action="" method="get">
             <label>
-                Código:
+                Desde código:
                 <input type="text" name="codigo" size="8" value="<?= $codigo ?>">
+            </label>
+            <label>
+                Hasta código:
+                <input type="text" name="codigo2" size="8" value="<?= $codigo2 ?>">
             </label>
             <button type="submit">Buscar</button>
         </form>
@@ -28,10 +32,11 @@
     $pdo = new PDO('pgsql:host=localhost;dbname=empresa', 'empresa', 'empresa');
     $pdo->beginTransaction();
     $sent = $pdo->query("LOCK TABLE departamentos IN SHARE MODE");
-    $sent = $pdo->prepare('SELECT COUNT(*) FROM departamentos WHERE codigo = :codigo');
+    $sent = $pdo->prepare('SELECT COUNT(*) FROM departamentos WHERE codigo >= :codigo AND codigo <= :codigo2');
+    $sent->execute([':codigo' => $codigo, ':codigo2' => $codigo2]); 
     $total = $sent->fetchColumn();
-    $sent = $pdo->prepare('SELECT * FROM departamentos WHERE codigo = :codigo ORDER BY codigo');
-    $sent->execute([':codigo' => $codigo]);
+    $sent = $pdo->prepare('SELECT * FROM departamentos WHERE codigo >= :codigo AND codigo <= :codigo2 ORDER BY codigo');
+    $sent->execute([':codigo' => $codigo, ':codigo2' => $codigo2]);
     $pdo->commit(); 
     ?>
 
