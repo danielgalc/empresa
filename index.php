@@ -29,10 +29,10 @@
     $pdo->beginTransaction();
     $sent = $pdo->query("LOCK TABLE departamentos IN SHARE MODE");
     $sent = $pdo->prepare('SELECT COUNT(*) FROM departamentos WHERE codigo = :codigo');
-    $sent->execute([':codigo => $codigo']);
     $total = $sent->fetchColumn();
-    $sent = $pdo->query('SELECT * FROM departamentos ORDER BY codigo');
-    $pdo->commit();
+    $sent = $pdo->prepare('SELECT * FROM departamentos WHERE codigo = :codigo ORDER BY codigo');
+    $sent->execute([':codigo' => $codigo]);
+    $pdo->commit(); 
     ?>
 
     <div>
