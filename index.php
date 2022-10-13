@@ -10,17 +10,24 @@
     <?php
     $pdo = new PDO('pgsql:host=localhost;dbname=empresa', 'empresa', 'empresa');
     $sent = $pdo->query('SELECT * FROM departamentos ORDER BY codigo');
-
-    $filas = $sent->fetchAll();
-    
-    echo "<pre>";
-
-    foreach($filas as $fila){
-        print_r($fila);
-    }
-
-    echo "</pre>";
-
     ?>
+
+    <div style="margin:auto">
+        <table style="margin:auto" border="1">
+            <thead>
+                <th>Código</th>
+                <th>Denominación</th>
+            </thead>
+            <tbody>
+                <?php foreach($sent as $fila): ?>
+                    <tr>
+                        <td><?= $fila['codigo'] ?></td>
+                        <td><?= $fila['denominacion'] ?></td>
+                    </tr>
+                <?php endforeach ?>
+            </tbody>
+        </table>
+
+    </div>
 </body>
 </html>
