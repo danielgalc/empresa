@@ -7,47 +7,61 @@
     <title>Departamentos</title>
 </head>
 <body>
-    <?php 
-    
-    $codigo = (isset($_GET['codigo'])) ? trim($_GET['codigo']) : null;
-    $codigo2 = (isset($_GET['codigo2'])) ? trim($_GET['codigo2']) : null;
-
+    <?php
+    $desde_codigo = (isset($_GET['desde_codigo'])) ? trim($_GET['desde_codigo']) : null;
+    $hasta_codigo = (isset($_GET['hasta_codigo'])) ? trim($_GET['hasta_codigo']) : null;
     ?>
-
     <div>
         <form action="" method="get">
-            <label>
-                Desde código:
-                <input type="text" name="codigo" size="8" value="<?= $codigo ?>">
-            </label>
-            <label>
-                Hasta código:
-                <input type="text" name="codigo2" size="8" value="<?= $codigo2 ?>">
-            </label>
-            <button type="submit">Buscar</button>
+            <fieldset>
+                <legend>Criterios de búsqueda</legend>
+                <p>
+                    <label>
+                        Desde código:
+                        <input type="text" name="desde_codigo" size="8" value="<?= $desde_codigo ?>">
+                    </label>
+                </p>
+                <p>
+                    <label>
+                        Hasta código:
+                        <input type="text" name="hasta_codigo" size="8" value="<?= $hasta_codigo ?>">
+                    </label>
+                </p>
+                <button type="submit">Buscar</button>
+            </fieldset>
         </form>
     </div>
-
     <?php
     $pdo = new PDO('pgsql:host=localhost;dbname=empresa', 'empresa', 'empresa');
     $pdo->beginTransaction();
-    $sent = $pdo->query("LOCK TABLE departamentos IN SHARE MODE");
-    $sent = $pdo->prepare('SELECT COUNT(*) FROM departamentos WHERE codigo >= :codigo AND codigo <= :codigo2');
-    $sent->execute([':codigo' => $codigo, ':codigo2' => $codigo2]); 
+    $sent = $pdo->query('LOCK TABLE departamentos IN SHARE MODE');
+    $sent = $pdo->prepare('SELECT COUNT(*)
+                             FROM departamentos
+                            WHERE codigo BETWEEN :desde_codigo AND :hasta_codigo');
+    $sent->execute([
+        ':desde_codigo' => $desde_codigo,
+        ':hasta_codigo' => $hasta_codigo,
+    ]);
     $total = $sent->fetchColumn();
-    $sent = $pdo->prepare('SELECT * FROM departamentos WHERE codigo >= :codigo AND codigo <= :codigo2 ORDER BY codigo');
-    $sent->execute([':codigo' => $codigo, ':codigo2' => $codigo2]);
-    $pdo->commit(); 
+    $sent = $pdo->prepare('SELECT *
+                             FROM departamentos
+                            WHERE codigo BETWEEN :desde_codigo AND :hasta_codigo
+                         ORDER BY codigo');
+    $sent->execute([
+        ':desde_codigo' => $desde_codigo,
+        ':hasta_codigo' => $hasta_codigo,
+    ]);
+    $pdo->commit();
     ?>
-
+    <br>
     <div>
-        <table style="margin:auto" border="1">
+        <table style="margin: auto" border="1">
             <thead>
                 <th>Código</th>
                 <th>Denominación</th>
             </thead>
             <tbody>
-                <?php foreach($sent as $fila): ?>
+                <?php foreach ($sent as $fila): ?>
                     <tr>
                         <td><?= $fila['codigo'] ?></td>
                         <td><?= $fila['denominacion'] ?></td>
