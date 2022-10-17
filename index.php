@@ -11,9 +11,9 @@
 
     require 'auxiliar.php';
 
-    $desde_codigo = (isset($_GET['desde_codigo'])) ? trim($_GET['desde_codigo']) : null;
-    $hasta_codigo = (isset($_GET['hasta_codigo'])) ? trim($_GET['hasta_codigo']) : null;
-    $denom = (isset($_GET['denom'])) ? trim($_GET['denom']) : null;
+    $desde_codigo = obtener_get('desde_codigo');
+    $hasta_codigo = obtener_get('hasta_codigo');
+    $denom = obtener_get('denom');
     ?>
     <div>
         <form action="" method="get">
@@ -94,6 +94,7 @@
             </tbody>
         </table>
         <p>Número total de filas: <?= $total ?></p>
+        <p><a href="insertar.php">Insertar un nuevo departamento</a></p>
     </div>
 </body>
 </html>

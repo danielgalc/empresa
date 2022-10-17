@@ -2,7 +2,7 @@
 
 require 'auxiliar.php';
 
-$id = isset($_POST['id']) ? trim(($_POST['id'])) : null;
+$id = obtener_post('id');
 
 if (!isset($id)){
     return volver();

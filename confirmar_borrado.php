@@ -8,7 +8,10 @@
 </head>
 <body>
     <?php
-    $id = isset($_GET['id']) ? trim(isset($_GET['id'])) : null;
+
+    require 'auxiliar.php';
+
+    $id = obtener_get('id');
     
     if(!isset($id)){
         return volver();
