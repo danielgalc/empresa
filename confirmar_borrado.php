@@ -9,10 +9,14 @@
 <body>
     <?php
     $id = isset($_GET['id']) ? trim(isset($_GET['id'])) : null;
-    // TODO
+    
+    if(!isset($id)){
+        return volver();
+    }
+
     ?>
 
-    <p>¿Está seguro de que desea borar ese departamento?</p>
+    <p>¿Está seguro de que desea borrar ese departamento?</p>
     <form action="borrar.php" method="post">
         <input type="hidden" name="id" value="<?= $id ?>">
         <button type="submit">Sí</button>

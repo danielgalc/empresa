@@ -8,6 +8,9 @@
 </head>
 <body>
     <?php
+
+    require 'auxiliar.php';
+
     $desde_codigo = (isset($_GET['desde_codigo'])) ? trim($_GET['desde_codigo']) : null;
     $hasta_codigo = (isset($_GET['hasta_codigo'])) ? trim($_GET['hasta_codigo']) : null;
     $denom = (isset($_GET['denom'])) ? trim($_GET['denom']) : null;
@@ -39,7 +42,7 @@
         </form>
     </div>
     <?php
-        $pdo = new PDO('pgsql:host=localhost;dbname=empresa', 'empresa', 'empresa');
+        $pdo = conectar();
         $pdo->beginTransaction();
         $pdo->exec('LOCK TABLE departamentos IN SHARE MODE');
         $where = [];
