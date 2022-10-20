@@ -49,18 +49,14 @@
         } else {
             $error[] = 'La longitud de la denominación es incorrecta';
         }
-
-        $pdo = conectar();
-        $sent = $pdo->prepare("INSERT INTO departamentos (codigo, denominacion) VALUES (:codigo, :denominacion)");
-        $sent->execute([':codigo' => $codigo, ':denominacion' => $denominacion]);
-        return volver();
-    }
-
-    if (empty($error)){
-        $pdo = conectar();
-        $sent = $pdo->prepare("INSERT INTO departamentos (codigo, denominacion) VALUES (:codigo, :denominacion)");
-        $sent->execute([':codigo' => $codigo, ':denominacion' => $denominacion]);
-        return volver();
+        
+        
+        if (empty($error)){
+            $pdo = conectar();
+            $sent = $pdo->prepare("INSERT INTO departamentos (codigo, denominacion) VALUES (:codigo, :denominacion)");
+            $sent->execute([':codigo' => $codigo, ':denominacion' => $denominacion]);
+            return volver();
+        }
     }
 
 
