@@ -8,9 +8,11 @@
 </head>
 <body>
     <?php
-    $desde_codigo = (isset($_GET['desde_codigo'])) ? trim($_GET['desde_codigo']) : null;
-    $hasta_codigo = (isset($_GET['hasta_codigo'])) ? trim($_GET['hasta_codigo']) : null;
-    $denom = (isset($_GET['denom'])) ? trim($_GET['denom']) : null;
+    require 'auxiliar.php';
+
+    $desde_codigo = obtener_get('desde_codigo');
+    $hasta_codigo = obtener_get('hasta_codigo');
+    $denominacion = obtener_get('denominacion');
     ?>
     <div>
         <form action="" method="get">
@@ -31,7 +33,7 @@
                 <p>
                     <label>
                         Denominación:
-                        <input type="text" name="denom" value="<?= $denom ?>">
+                        <input type="text" name="denominacion" value="<?= $denominacion ?>">
                     </label>
                 </p>
                 <button type="submit">Buscar</button>
@@ -39,37 +41,30 @@
         </form>
     </div>
     <?php
-        $pdo = new PDO('pgsql:host=localhost;dbname=empresa', 'empresa', 'empresa');
-        $pdo->beginTransaction();
-        $pdo->exec('LOCK TABLE departamentos IN SHARE MODE');
-        $where = [];
-        $execute = [];
-
-        /* BUCLES IF PARA QUE SOLO CON UN PARÁMETRO FUNCIONE*/
-        
-        if(isset($desde_codigo) && $desde_codigo != ''){            
-            $where[] = 'codigo >= :desde_codigo';
-            $execute[':desde_codigo'] = $desde_codigo;
-        }
-
-        if(isset($hasta_codigo) && $hasta_codigo != ''){            
-            $where[] = 'codigo <= :hasta_codigo';
-            $execute[':hasta_codigo'] = $hasta_codigo;
-        }
-
-        if(isset($denom) && $denom != ''){            
-            $where[] = 'lower(denominacion) LIKE lower(:denom)';
-            $execute[':denom'] = "%$denom%";
-        }
-
-        $where = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
-        $sent = $pdo->prepare("SELECT COUNT(*) FROM departamentos $where");
-        $sent->execute($execute);
-        $total = $sent->fetchColumn();
-        $sent = $pdo->prepare("SELECT * FROM departamentos $where ORDER BY codigo");
-        $sent->execute($execute);
-        $pdo->commit();
-
+    $pdo = conectar();
+    $pdo->beginTransaction();
+    $pdo->exec('LOCK TABLE departamentos IN SHARE MODE');
+    $where = [];
+    $execute = [];
+    if (isset($desde_codigo) && $desde_codigo != '') {
+        $where[] = 'codigo >= :desde_codigo';
+        $execute[':desde_codigo'] = $desde_codigo;
+    }
+    if (isset($hasta_codigo) && $hasta_codigo != '') {
+        $where[] = 'codigo <= :hasta_codigo';
+        $execute[':hasta_codigo'] = $hasta_codigo;
+    }
+    if (isset($denominacion) && $denominacion != '') {
+        $where[] = 'lower(denominacion) LIKE lower(:denominacion)';
+        $execute[':denominacion'] = "%$denominacion%";
+    }
+    $where = !empty($where) ? 'WHERE ' . implode(' AND ', $where) : '';
+    $sent = $pdo->prepare("SELECT COUNT(*) FROM departamentos $where");
+    $sent->execute($execute);
+    $total = $sent->fetchColumn();
+    $sent = $pdo->prepare("SELECT * FROM departamentos $where ORDER BY codigo");
+    $sent->execute($execute);
+    $pdo->commit();
     ?>
     <br>
     <div>
@@ -77,20 +72,21 @@
             <thead>
                 <th>Código</th>
                 <th>Denominación</th>
-                <th>Acciones</th>
+                <th colspan="2">Acciones</th>
             </thead>
             <tbody>
-                <?php                
-                    foreach ($sent as $fila): ?>
+                <?php foreach ($sent as $fila): ?>
                     <tr>
                         <td><?= $fila['codigo'] ?></td>
                         <td><?= $fila['denominacion'] ?></td>
                         <td><a href="confirmar_borrado.php?id=<?= $fila['id'] ?>">Borrar</a></td>
+                        <td><a href="modificar.php?id=<?= $fila['id'] ?>">Modificar</a></td>
                     </tr>
                 <?php endforeach ?>
             </tbody>
         </table>
         <p>Número total de filas: <?= $total ?></p>
+        <a href="insertar.php">Insertar un nuevo departamento</a>
     </div>
 </body>
 </html>
