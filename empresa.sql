@@ -10,12 +10,12 @@ CREATE TABLE departamentos (
 DROP TABLE IF EXISTS empleados CASCADE;
 
 CREATE TABLE empleados (
-    id              bigserial         PRIMARY KEY,
-    numero          numeric(4)        NOT NULL UNIQUE,
-    nombre          varchar(255)      NOT NULL,
-    salario         numeric(7,2)      NOT NULL,
-    fecha_nac       timestamp NOT NULL,
-    departamento_id bigint            NOT NULL REFERENCES departamentos(id)
+    id              bigserial    PRIMARY KEY,
+    numero          numeric(4)   NOT NULL UNIQUE,
+    nombre          varchar(255) NOT NULL,
+    salario         numeric(7,2) NOT NULL,
+    fecha_nac       timestamp    NOT NULL,
+    departamento_id bigint       NOT NULL REFERENCES departamentos(id)
 );
 
 -- Fixtures:
