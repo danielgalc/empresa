@@ -19,7 +19,7 @@
 </head>
 <body>
     <?php
-    require 'auxiliar.php';
+    require 'comunes/auxiliar.php';
 
     try {
         $error = [];

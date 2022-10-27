@@ -8,8 +8,7 @@
 </head>
 <body>
     <?php
-
-    require 'auxiliar.php';
+    require 'comunes/auxiliar.php';
 
     $id = obtener_get('id');
     

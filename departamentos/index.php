@@ -8,7 +8,7 @@
 </head>
 <body>
     <?php
-    require 'auxiliar.php';
+    require 'comunes/auxiliar.php';
 
     $desde_codigo = obtener_get('desde_codigo');
     $hasta_codigo = obtener_get('hasta_codigo');
