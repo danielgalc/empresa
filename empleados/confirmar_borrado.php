@@ -18,7 +18,7 @@
 
     cabecera();
     ?>
-    <p>¿Está seguro de que desea borrar ese departamento?</p>
+    <p>¿Está seguro de que desea borrar ese empleado?</p>
     <form action="borrar.php" method="post">
         <input type="hidden" name="id" value="<?= $id ?>">
         <button type="submit">Sí</button>

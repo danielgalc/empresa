@@ -8,7 +8,7 @@
 </head>
 <body>
     <?php
-    require 'comunes/auxiliar.php';
+    require 'auxiliar.php';
 
     $id = obtener_get('id');
 
@@ -53,6 +53,8 @@
         }
         extract($fila);
     }
+
+    cabecera();
     ?>
     <div>
         <form action="" method="post">
