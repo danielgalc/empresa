@@ -1,3 +1,4 @@
+<?php session_start() ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -27,13 +28,13 @@
         $denominacion = obtener_post('denominacion');
         comprobar_params($codigo, $denominacion);
         validar_digitos($codigo, 'codigo', $error);
-        hay_errores($error);
+        comprobar_errores($error);
         validar_rango_numerico($codigo, 'codigo', 0, 99, $error);
         validar_existe('departamentos', 'codigo', $codigo, 'codigo', $error);
         validar_longitud($denominacion, 'denominacion', 1, 255, $error);
-        hay_errores($error);
+        comprobar_errores($error);
         insertar_departamento($codigo, $denominacion);
-        return volver();
+        return volver_principal();
     } catch (Exception $e) {
         // Vacío
     }

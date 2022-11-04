@@ -1,13 +1,12 @@
+<?php session_start() ?>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Modificar un departamento</title>
 </head>
-
 <body>
     <?php
     require 'auxiliar.php';
@@ -15,7 +14,7 @@
     $id = obtener_get('id');
 
     if (!isset($id)) {
-        return volver();
+        return volver_principal();
     }
 
     try {
@@ -25,13 +24,13 @@
         comprobar_params($codigo, $denominacion);
         // Validar
         validar_digitos($codigo, 'codigo', $error);
-        hay_errores($error);
+        comprobar_errores($error);
         validar_rango_numerico($codigo, 'codigo', 0, 99, $error);
         // TODO
         validar_existe('departamentos', 'codigo', $codigo, 'codigo', $error);
         //
         validar_longitud($denominacion, 'denominacion', 1, 255, $error);
-        hay_errores($error);
+        comprobar_errores($error);
         $sent = $pdo->prepare("UPDATE departamentos
                                   SET codigo = :codigo,
                                       denominacion = :denominacion
@@ -41,7 +40,7 @@
             ':denominacion' => $denominacion,
             ':id' => $id,
         ]);
-        return volver();
+        return volver_principal();
     } catch (Exception $e) {
         $pdo = conectar();
         $sent = $pdo->prepare("SELECT codigo, denominacion
@@ -51,7 +50,7 @@
         $fila = $sent->fetch();
 
         if (empty($fila)) {
-            return volver();
+            return volver_principal();
         }
         extract($fila);
     }
@@ -63,14 +62,20 @@
             <div>
                 <label <?= css_campo_error('codigo', $error) ?>>
                     Código:
-                    <input type="text" name="codigo" size="10" value="<?= $codigo ?>" <?= css_campo_error('codigo', $error) ?>>
+                    <input type="text" name="codigo" size="10"
+                    value="<?= $codigo ?>"
+                    <?= css_campo_error('codigo', $error) ?>
+                    >
                 </label>
                 <?php mostrar_errores('codigo', $error) ?>
             </div>
             <div>
                 <label <?= css_campo_error('denominacion', $error) ?>>
                     Denominación:
-                    <input type="text" name="denominacion" value="<?= $denominacion ?>" <?= css_campo_error('denominacion', $error) ?>>
+                    <input type="text" name="denominacion"
+                    value="<?= $denominacion ?>"
+                    <?= css_campo_error('denominacion', $error) ?>
+                    >
                 </label>
                 <?php mostrar_errores('denominacion', $error) ?>
             </div>
@@ -81,5 +86,4 @@
         </form>
     </div>
 </body>
-
 </html>
